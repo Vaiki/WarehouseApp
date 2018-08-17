@@ -25,11 +25,11 @@ public class DirectLab {
 
     private DirectLab(Context context) {
         mDirects = new ArrayList<>();
-        mDirects.add(new Direct("Болт", "Метизы", "m16x40"));
-        mDirects.add(new Direct("Шпилька", "Метизы", "m12"));
-        mDirects.add(new Direct("Болт", "Сантехника", "m6x80"));
-        mDirects.add(new Direct("Кабель", "Электрика", "6кв"));
-        mDirects.add(new Direct("Щиток", "Электрика", "30х40см"));
+        mDirects.add(new Direct("Болт", "Метизы", "m16x40",12));
+        mDirects.add(new Direct("Шпилька", "Метизы", "m12",23));
+        mDirects.add(new Direct("Болт", "Сантехника", "m6x80",45));
+        mDirects.add(new Direct("Кабель", "Электрика", "6кв",453));
+        mDirects.add(new Direct("Щиток", "Электрика", "30х40см",1));
     }
 
 
@@ -37,7 +37,7 @@ public class DirectLab {
         return mDirects;
     }
 
-    public static List<String> getCatName(DirectLab directLab) {
+    public static List<String> getCatName(DirectLab directLab) { //возвращает уникальные названия категорий
         dir = new HashSet<>();
         for (Direct d : directLab.getDirects()) {
             dir.add(d.getName_directory());

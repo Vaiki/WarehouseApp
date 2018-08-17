@@ -14,11 +14,12 @@ public class Direct {
         mId = UUID.randomUUID();
 
     }
-    public Direct(String name,String catalog, String description ){
+    public Direct(String name,String catalog, String description, int qty ){
         mId = UUID.randomUUID();
         name_product = name;
         this.name_directory = catalog;
         this.description = description;
+        this.qty = qty;
     }
     public UUID getId() {
         return mId;

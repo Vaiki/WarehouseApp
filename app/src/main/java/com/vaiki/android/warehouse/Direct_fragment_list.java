@@ -23,6 +23,7 @@ public class Direct_fragment_list extends Fragment {
     private DirectAdapter mAdapter;
 
 
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.direct_fragment_list, container, false);
         mDirectRecyclerView = (RecyclerView) view.findViewById(R.id.direct_recycler_view);
@@ -33,23 +34,32 @@ public class Direct_fragment_list extends Fragment {
 
     private void updateUI() {
         DirectLab directLab = DirectLab.get(getActivity());
+
         mAdapter = new DirectAdapter(directLab.getDirects());
         mDirectRecyclerView.setAdapter(mAdapter);
     }
 
     private class DirectHolder extends RecyclerView.ViewHolder {
-        private TextView mDirectory;
+        private TextView mDescription;
+        private TextView mProduct;
+        private TextView mQty;
         private Direct mDirect;
 
         public DirectHolder(View itemView) {
             super(itemView);
-            mDirectory = (TextView) itemView.findViewById(R.id.directory);
+            mQty = (TextView) itemView.findViewById(R.id.qty);
+            mProduct = (TextView) itemView.findViewById(R.id.product);
+            mDescription = (TextView) itemView.findViewById(R.id.description);
         }
-
+        public DirectHolder(LayoutInflater inflater, ViewGroup parent){
+            super(inflater.inflate(R.layout.direct_item_list,parent,false));
+            mDescription = (TextView) itemView.findViewById(R.id.product);
+        }
         public void bind(Direct direct) { // получив crime метод обновит виджеты в соответствии с состоянием crime
             mDirect = direct;
-
-            mDirectory.setText(mDirect.getName_directory());
+            mProduct.setText(mDirect.getName_product());
+            mQty.setText(String.valueOf(mDirect.getQty()));
+            mDescription.setText(mDirect.getDescription());
 
         }
     }
@@ -65,6 +75,8 @@ public class Direct_fragment_list extends Fragment {
         public DirectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.direct_item_list, parent, false);
             return new DirectHolder(v);
+//            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+//            return new DirectHolder(layoutInflater, parent);
 
         }
 

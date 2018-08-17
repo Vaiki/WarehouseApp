@@ -34,7 +34,7 @@ public class Direct_fragment_list extends Fragment {
 
     private void updateUI() {
         DirectLab directLab = DirectLab.get(getActivity());
-
+        DirectLab.getSortItem("Метизы",directLab);
         mAdapter = new DirectAdapter(directLab.getDirects());
         mDirectRecyclerView.setAdapter(mAdapter);
     }

@@ -13,30 +13,38 @@ import java.util.*;
 public class DirectLab {
     private static DirectLab sDirectLab;
     private List<Direct> mDirects;
+    private static HashSet<String> dir;
+    private static List<String> catName;
 
     public static DirectLab get(Context context) {
-        if (sDirectLab == null) {sDirectLab = new DirectLab(context);}
+        if (sDirectLab == null) {
+            sDirectLab = new DirectLab(context);
+        }
         return sDirectLab;
     }
 
     private DirectLab(Context context) {
-
-mDirects.add(new Direct("Болт","Метизы","m16x40"));
-mDirects.add(new Direct("Шпилька","Метизы","m12"));
-mDirects.add(new Direct("Болт","Метизы","m6x80"));
-mDirects.add(new Direct("Кабель","Электрика","6кв"));
-mDirects.add(new Direct("Щиток","Электрика","30х40см"));
-}
+        mDirects = new ArrayList<>();
+        mDirects.add(new Direct("Болт", "Метизы", "m16x40"));
+        mDirects.add(new Direct("Шпилька", "Метизы", "m12"));
+        mDirects.add(new Direct("Болт", "Сантехника", "m6x80"));
+        mDirects.add(new Direct("Кабель", "Электрика", "6кв"));
+        mDirects.add(new Direct("Щиток", "Электрика", "30х40см"));
+    }
 
 
     public List<Direct> getDirects() {
         return mDirects;
     }
 
-   public List<Direct> getCatalog(List<Direct> dir){
-       List<Direct> cat = new ArrayList<>();
+    public static List<String> getCatName(DirectLab directLab) {
+        dir = new HashSet<>();
+        for (Direct d : directLab.getDirects()) {
+            dir.add(d.getName_directory());
+        }
+        catName = new ArrayList<>(dir);
+        return catName;
+    }
 
-       return cat;
 
-   }
 }

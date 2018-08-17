@@ -17,7 +17,7 @@ public class Direct {
     public Direct(String name,String catalog, String description ){
         mId = UUID.randomUUID();
         name_product = name;
-        name_directory = catalog;
+        this.name_directory = catalog;
         this.description = description;
     }
     public UUID getId() {

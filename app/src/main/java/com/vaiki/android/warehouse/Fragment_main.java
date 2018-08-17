@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import javax.xml.datatype.Duration;
-
 /**
  * Created by E_not on 25.07.2018.
  */
@@ -18,17 +16,18 @@ import javax.xml.datatype.Duration;
 public class Fragment_main extends Fragment {
     private Button mAdd_Form;
     private Button mDirect;
+    private Button mMove;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_main,container,false);
-        mAdd_Form = (Button)v.findViewById(R.id.add_product);
+        View v = inflater.inflate(R.layout.fragment_main, container, false);
+        mAdd_Form = (Button) v.findViewById(R.id.add_product);
         mAdd_Form.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),Add_activity.class);
+                Intent intent = new Intent(getActivity(), Add_activity.class);
                 startActivity(intent);
             }
         });
@@ -36,10 +35,20 @@ public class Fragment_main extends Fragment {
         mDirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),Direct_activity_list.class);
+                Intent intent = new Intent(getActivity(), ListDirectory.class);
                 startActivity(intent);
             }
         });
+        mMove = (Button) v.findViewById(R.id.moving_product);
+        mMove.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         Intent intent = new Intent(getActivity(), ListDirectory.class);
+                                         startActivity(intent);
+                                     }
+                                 }
+        );
+
         return v;
     }
 

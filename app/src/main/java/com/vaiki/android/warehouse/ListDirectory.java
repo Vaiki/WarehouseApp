@@ -17,8 +17,9 @@ import java.util.*;
 
 public class ListDirectory extends Activity {
     private ListView mListViews;
-    private List<String> array (){ DirectLab mDirectLab = DirectLab.get(this);
-        return DirectLab.getCatName(mDirectLab);}
+    public final static String EXTRA_SORT_ITEM = "extra_sort_item";
+    private List<String> createListDirectories(){ DirectLab mDirectLab = DirectLab.get(this);
+        return DirectLab.getCatName(mDirectLab);}//возвращает имена категорий без дублирования
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,12 +27,14 @@ public class ListDirectory extends Activity {
 
         setContentView(R.layout.list_view);
         mListViews = (ListView) findViewById(R.id.lvMain);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, array());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, createListDirectories());
         mListViews.setAdapter(adapter);
         mListViews.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Intent intent = new Intent(ListDirectory.this, Direct_activity_list.class);
+                intent.putExtra(EXTRA_SORT_ITEM, createListDirectories().get(position));
                 startActivity(intent);
             }
         });

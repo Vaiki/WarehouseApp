@@ -1,5 +1,7 @@
 package com.vaiki.android.warehouse;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import java.util.*;
 public class Direct_fragment_list extends Fragment {
     private RecyclerView mDirectRecyclerView;
     private DirectAdapter mAdapter;
+    private Direct mDirect;
 
 
 
@@ -30,12 +33,15 @@ public class Direct_fragment_list extends Fragment {
         mDirectRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
         return view;
+
     }
 
+
     private void updateUI() {
+        String v = getActivity().getIntent().getStringExtra(ListDirectory.EXTRA_SORT_ITEM);
         DirectLab directLab = DirectLab.get(getActivity());
-        DirectLab.getSortItem("Метизы",directLab);
-        mAdapter = new DirectAdapter(directLab.getDirects());
+
+        mAdapter = new DirectAdapter(DirectLab.getSortItem(v,directLab));
         mDirectRecyclerView.setAdapter(mAdapter);
     }
 
@@ -55,7 +61,7 @@ public class Direct_fragment_list extends Fragment {
             super(inflater.inflate(R.layout.direct_item_list,parent,false));
             mDescription = (TextView) itemView.findViewById(R.id.product);
         }
-        public void bind(Direct direct) { // получив crime метод обновит виджеты в соответствии с состоянием crime
+        public void bind(Direct direct) { // получив direct метод обновит виджеты в соответствии с состоянием direct
             mDirect = direct;
             mProduct.setText(mDirect.getName_product());
             mQty.setText(String.valueOf(mDirect.getQty()));
@@ -75,16 +81,15 @@ public class Direct_fragment_list extends Fragment {
         public DirectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.direct_item_list, parent, false);
             return new DirectHolder(v);
-//            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-//            return new DirectHolder(layoutInflater, parent);
+
 
         }
 
         @Override
         public void onBindViewHolder(DirectHolder holder, int position) {
             Direct direct = mDirects.get(position);
-            //crime принимает данные из списка
-            holder.bind(direct); // метод отображает данные crime в списке
+
+            holder.bind(direct);
         }
 
         @Override

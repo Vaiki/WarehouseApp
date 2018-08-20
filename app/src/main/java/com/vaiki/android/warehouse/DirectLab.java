@@ -14,7 +14,7 @@ public class DirectLab {
     private static DirectLab sDirectLab;
     private List<Direct> mDirects;
     private static HashSet<String> dir;
-        private static List<String> catName;
+    private static List<String> catName;
 
     public static DirectLab get(Context context) {
         if (sDirectLab == null) {
@@ -25,11 +25,11 @@ public class DirectLab {
 
     private DirectLab(Context context) {
         mDirects = new ArrayList<>();
-        mDirects.add(new Direct("Болт", "Метизы", "m16x40",12));
-        mDirects.add(new Direct("Шпилька", "Метизы", "m12",23));
-        mDirects.add(new Direct("Болт", "Сантехника", "m6x80",45));
-        mDirects.add(new Direct("Кабель", "Электрика", "6кв",453));
-        mDirects.add(new Direct("Щиток", "Электрика", "30х40см",1));
+        mDirects.add(new Direct("Болт", "Метизы", "m16x40", 12));
+        mDirects.add(new Direct("Шпилька", "Метизы", "m12", 23));
+        mDirects.add(new Direct("Труба 230", "Сантехника", "6метров", 45));
+        mDirects.add(new Direct("Кабель", "Электрика", "6кв", 453));
+        mDirects.add(new Direct("Щиток", "Электрика", "30х40см", 1));
     }
 
 
@@ -45,14 +45,12 @@ public class DirectLab {
         catName = new ArrayList<>(dir);
         return catName;
     }
+
     public static List<Direct> getSortItem(String s, DirectLab directLab) {
         List<Direct> sortDirectory = new ArrayList<>();
-    for (Direct d : directLab.getDirects()){
-        if (d.getName_directory().equals(s))sortDirectory.add(d);
+        for (Direct d : directLab.getDirects()) {
+            if (d.getName_directory().equals(s)) sortDirectory.add(d);
+        }
+        return sortDirectory;
     }
-
-
-        return sortDirectory;}
-
-
 }

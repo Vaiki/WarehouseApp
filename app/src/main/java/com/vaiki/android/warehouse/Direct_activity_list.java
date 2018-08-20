@@ -2,6 +2,8 @@ package com.vaiki.android.warehouse;
 
 import android.support.v4.app.Fragment;
 
+import java.security.PrivateKey;
+
 /**
  * Created by E_not on 27.07.2018.
  */

@@ -23,8 +23,6 @@ import java.util.*;
 public class Direct_fragment_list extends Fragment {
     private RecyclerView mDirectRecyclerView;
     private DirectAdapter mAdapter;
-    private Direct mDirect;
-
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,12 +34,11 @@ public class Direct_fragment_list extends Fragment {
 
     }
 
-
     private void updateUI() {
         String v = getActivity().getIntent().getStringExtra(ListDirectory.EXTRA_SORT_ITEM);
         DirectLab directLab = DirectLab.get(getActivity());
 
-        mAdapter = new DirectAdapter(DirectLab.getSortItem(v,directLab));
+        mAdapter = new DirectAdapter(DirectLab.getSortItem(v, directLab));
         mDirectRecyclerView.setAdapter(mAdapter);
     }
 
@@ -57,10 +54,12 @@ public class Direct_fragment_list extends Fragment {
             mProduct = (TextView) itemView.findViewById(R.id.product);
             mDescription = (TextView) itemView.findViewById(R.id.description);
         }
-        public DirectHolder(LayoutInflater inflater, ViewGroup parent){
-            super(inflater.inflate(R.layout.direct_item_list,parent,false));
+
+        public DirectHolder(LayoutInflater inflater, ViewGroup parent) {
+            super(inflater.inflate(R.layout.direct_item_list, parent, false));
             mDescription = (TextView) itemView.findViewById(R.id.product);
         }
+
         public void bind(Direct direct) { // получив direct метод обновит виджеты в соответствии с состоянием direct
             mDirect = direct;
             mProduct.setText(mDirect.getName_product());
@@ -81,7 +80,6 @@ public class Direct_fragment_list extends Fragment {
         public DirectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.direct_item_list, parent, false);
             return new DirectHolder(v);
-
 
         }
 

@@ -10,31 +10,29 @@
 
     <TextView
         android:id="@+id/product"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Наименование"
         android:textAlignment="center"
+        android:textColor="@android:color/black"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/description"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
         android:text="Описание"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textColor="@android:color/black"
         app:layout_constraintLeft_toRightOf="@+id/product"
-        app:layout_constraintRight_toLeftOf="@+id/qty"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginStart="32dp"/>
 
     <TextView
         android:id="@+id/qty"
@@ -42,9 +40,26 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Количество"
+        android:textColor="@android:color/black"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/line"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="#b4b1b1"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dip"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

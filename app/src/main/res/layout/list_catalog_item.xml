@@ -10,6 +10,10 @@
         android:id="@+id/catalog_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name Product"
-        android:textAlignment="center"/>
+
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"/>
+
+
 </LinearLayout>

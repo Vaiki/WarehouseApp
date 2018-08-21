@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by E_not on 27.07.2018.
@@ -113,7 +114,9 @@ public class Add_fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-            }
+DirectLab.get(getActivity()).add_direct(mDirect);
+Toast.makeText(getActivity(),R.string.add_direct,Toast.LENGTH_LONG).show();
+        }
         });
 
         return v;

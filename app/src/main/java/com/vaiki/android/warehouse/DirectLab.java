@@ -1,6 +1,7 @@
 package com.vaiki.android.warehouse;
 
 import android.content.Context;
+import android.support.constraint.solver.ArrayLinkedVariables;
 import android.view.LayoutInflater;
 
 import java.lang.reflect.Array;
@@ -23,13 +24,17 @@ public class DirectLab {
         return sDirectLab;
     }
 
+    public void add_direct(Direct d){
+        mDirects.add(d);
+
+    }
     private DirectLab(Context context) {
         mDirects = new ArrayList<>();
-        mDirects.add(new Direct("Болт", "Метизы", "m16x40", 12));
-        mDirects.add(new Direct("Шпилька", "Метизы", "m12", 23));
-        mDirects.add(new Direct("Труба 230", "Сантехника", "6метров", 45));
-        mDirects.add(new Direct("Кабель", "Электрика", "6кв", 453));
-        mDirects.add(new Direct("Щиток", "Электрика", "30х40см", 1));
+//        mDirects.add(new Direct("Болт", "Метизы", "m16x40", 12));
+//        mDirects.add(new Direct("Шпилька", "Метизы", "m12", 23));
+//        mDirects.add(new Direct("Труба 230", "Сантехника", "6метров", 45));
+//        mDirects.add(new Direct("Кабель", "Электрика", "6кв", 453));
+//        mDirects.add(new Direct("Щиток", "Электрика", "30х40см", 1));
     }
 
 

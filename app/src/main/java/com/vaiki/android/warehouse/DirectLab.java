@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.constraint.solver.ArrayLinkedVariables;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import com.vaiki.android.warehouse.database.DirectBaseHelper;
 import com.vaiki.android.warehouse.database.DirectCursorWrapper;
@@ -44,13 +45,32 @@ public class DirectLab {
         mContext = context.getApplicationContext();
         mDatabase = new DirectBaseHelper(mContext).getWritableDatabase();
         //   mDirects = new ArrayList<>();
-
     }
 
-    public void updateDirect(Direct direct) {
-        String uuidString = direct.getId().toString();
-        ContentValues values = getContentValues(direct);
-        mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.UUID + "= ?", new String[]{uuidString});
+
+    public void updateDirect(Context context,Direct direct) {
+
+        //String uuidString = direct.getId().toString();
+        String description = direct.getDescription();
+        String product = direct.getName_product();
+
+        DirectCursorWrapper c = queryDirects(DirectTable.Cols.DESCRIPTION + "= ?", new String[]{description});
+
+        if (c.moveToFirst()) {
+            direct.setQty(direct.getQty() + c.getDirect().getQty());
+            ContentValues values = getContentValues(direct);
+            mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ?", new String[]{description});
+            Toast.makeText(context,R.string.update, Toast.LENGTH_LONG).show();
+        }
+        //mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.UUID + "= ?", new String[]{uuidString});
+        else {
+            ContentValues add_values = getContentValues(direct);
+            mDatabase.insert(DirectTable.NAME, null, add_values);
+            Toast.makeText(context,R.string.add_direct, Toast.LENGTH_LONG).show();
+        }
+        c.close();
+        mDatabase.close();
+
     }
 
     private DirectCursorWrapper queryDirects(String whereClause, String[] whereArgs) {
@@ -85,7 +105,7 @@ public class DirectLab {
         return catName;
     }
 
-    public static List<Direct> getSortItem(String s, DirectLab directLab) {
+    public static List<Direct> getSortItem(String s, DirectLab directLab) {// возвращает позиции категории
         List<Direct> sortDirectory = new ArrayList<>();
         for (Direct d : directLab.getDirects()) {
             if (d.getName_directory().equals(s)) sortDirectory.add(d);

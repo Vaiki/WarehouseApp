@@ -16,4 +16,12 @@ public class DirectDbSchema {
          }
 
     }
+    public static final class DirectoryTable {
+        public static final String DIRECTORY_NAME = "catalog";
+            public static final class Colums {
+                public static final String NAMEDIR = "namedirectory";
+
+            }
+
+    }
 }

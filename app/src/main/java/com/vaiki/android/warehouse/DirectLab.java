@@ -54,22 +54,20 @@ public class DirectLab {
         String description = direct.getDescription();
         String product = direct.getName_product();
 
-        DirectCursorWrapper c = queryDirects(DirectTable.Cols.DESCRIPTION + "= ?", new String[]{description});
+        DirectCursorWrapper c = queryDirects(DirectTable.Cols.DESCRIPTION + "= ? AND "+ DirectTable.Cols.PRODUCT + "= ?", new String[]{description, product});
 
         if (c.moveToFirst()) {
             direct.setQty(direct.getQty() + c.getDirect().getQty());
             ContentValues values = getContentValues(direct);
-            mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ?", new String[]{description});
-            Toast.makeText(context,R.string.update, Toast.LENGTH_LONG).show();
+            mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ? AND "+ DirectTable.Cols.PRODUCT + "= ?", new String[]{description, product});
+            Toast.makeText(context,R.string.update, Toast.LENGTH_SHORT).show();
         }
-        //mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.UUID + "= ?", new String[]{uuidString});
         else {
             ContentValues add_values = getContentValues(direct);
             mDatabase.insert(DirectTable.NAME, null, add_values);
-            Toast.makeText(context,R.string.add_direct, Toast.LENGTH_LONG).show();
+            Toast.makeText(context,R.string.add_direct, Toast.LENGTH_SHORT).show();
         }
         c.close();
-        mDatabase.close();
 
     }
 
@@ -81,7 +79,7 @@ public class DirectLab {
     }
 
     public List<Direct> getDirects() {
-        //return mDirects;
+
         List<Direct> directs = new ArrayList<>();
         DirectCursorWrapper cursor = queryDirects(null, null);
         try {

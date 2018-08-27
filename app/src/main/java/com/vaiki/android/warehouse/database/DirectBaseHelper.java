@@ -13,6 +13,7 @@ import com.vaiki.android.warehouse.database.DirectDbSchema.DirectTable;
 public class DirectBaseHelper extends SQLiteOpenHelper {
     private static  final  int VERSION = 1;
     private static final String DATABASE_NAME = "directBase.db";
+    private static final String DATABASE_DIRECTORY = "directoryBase.db";
     public DirectBaseHelper(Context context){
         super(context, DATABASE_NAME,null,VERSION);
     }
@@ -26,6 +27,8 @@ public class DirectBaseHelper extends SQLiteOpenHelper {
             DirectTable.Cols.DESCRIPTION + ", " +
             DirectTable.Cols.QTY + ")"
     );
+        db.execSQL("create table "+ DirectDbSchema.DirectoryTable.DIRECTORY_NAME + "("+
+                DirectDbSchema.DirectoryTable.Colums.NAMEDIR+ ")");
     }
 
     @Override

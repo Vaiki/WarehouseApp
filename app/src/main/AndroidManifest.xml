@@ -25,6 +25,9 @@
         <activity android:name=".ListDirectory">
 
         </activity>
+        <activity android:name=".MovingActivity">
+
+        </activity>
     </application>
 
 </manifest>

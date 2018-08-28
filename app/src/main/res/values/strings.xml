@@ -2,4 +2,6 @@
     <string name="app_name">SK storage</string>
     <string name="add_direct">Товар внесен в базу</string>
     <string name="update">Данные обновлены</string>
+    <string name="empty">Заполните пустое значение</string>
+    <string name="empty_qty">Заполните поле /"Количество/"!</string>
 </resources>

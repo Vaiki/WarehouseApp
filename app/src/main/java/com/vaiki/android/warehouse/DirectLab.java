@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.constraint.solver.ArrayLinkedVariables;
 import android.view.LayoutInflater;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.vaiki.android.warehouse.database.DirectBaseHelper;
@@ -24,7 +25,6 @@ import static com.vaiki.android.warehouse.database.DirectDbSchema.*;
 
 public class DirectLab {
     private static DirectLab sDirectLab;
-    // private List<Direct> mDirects;
     private static HashSet<String> dir;
     private static List<String> catName;
     private Context mContext;
@@ -38,7 +38,6 @@ public class DirectLab {
     }
 
     public void add_direct(Direct d) {
-
         ContentValues values = getContentValues(d);
         mDatabase.insert(DirectTable.NAME, null, values);
     }
@@ -46,41 +45,43 @@ public class DirectLab {
     private DirectLab(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new DirectBaseHelper(mContext).getWritableDatabase();
-        //   mDirects = new ArrayList<>();
     }
 
 
-    public void updateDirect(Context context,Direct direct) {
-
-        //String uuidString = direct.getId().toString();
+    public void updateDirect(Context context, Direct direct, Button button) {
         String description = direct.getDescription();
         String product = direct.getName_product();
-
-        DirectCursorWrapper c = queryDirects(DirectTable.NAME,DirectTable.Cols.DESCRIPTION + "= ? AND "+ DirectTable.Cols.PRODUCT + "= ?", new String[]{description, product});
-
-        if (c.moveToFirst()) {
-            direct.setQty(direct.getQty() + c.getDirect().getQty());
-            ContentValues values = getContentValues(direct);
-            mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ? AND "+ DirectTable.Cols.PRODUCT + "= ?", new String[]{description, product});
-            Toast.makeText(context,R.string.update, Toast.LENGTH_SHORT).show();
-        }
-        else {
-            add_direct(direct);
-            Toast.makeText(context,R.string.add_direct, Toast.LENGTH_SHORT).show();
-        }
-        c.close();
-
+        if (direct.getQty()==0)Toast.makeText(context, R.string.empty_qty, Toast.LENGTH_SHORT).show();else{
+        try {
+            DirectCursorWrapper c = queryDirects(DirectTable.NAME, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
+                    new String[]{description, product});
+            if (c.moveToFirst()) {
+                direct.setQty(direct.getQty() + c.getDirect().getQty());
+                ContentValues values = getContentValues(direct);
+                mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
+                        new String[]{description, product});
+                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+            } else {
+                add_direct(direct);
+                Toast.makeText(context, R.string.add_direct, Toast.LENGTH_SHORT).show();
+            }
+            c.close();
+            button.setEnabled(false);
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.empty, Toast.LENGTH_SHORT).show();
+        }}
     }
 
-    private DirectCursorWrapper queryDirects(String tableName,String whereClause, String[] whereArgs) {
+    private DirectCursorWrapper queryDirects(String tableName, String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(
                 tableName, null, whereClause, whereArgs, null, null, null
         );
         return new DirectCursorWrapper(cursor);
     }
-    public List<String> getDirectory_Name(){
+
+    public List<String> getDirectory_Name() {
         List<String> name_directory = new ArrayList<>();
-        DirectCursorWrapper cursor = queryDirects(DirectoryTable.DIRECTORY_NAME,null,null);
+        DirectCursorWrapper cursor = queryDirects(DirectoryTable.DIRECTORY_NAME, null, null);
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -96,7 +97,7 @@ public class DirectLab {
     public List<Direct> getDirects() {
 
         List<Direct> directs = new ArrayList<>();
-        DirectCursorWrapper cursor = queryDirects(DirectTable.NAME,null, null);
+        DirectCursorWrapper cursor = queryDirects(DirectTable.NAME, null, null);
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.vaiki.android.warehouse.database.DirectDbSchema.DirectTable;
 
+import static com.vaiki.android.warehouse.database.DirectDbSchema.*;
+
 /**
  * Created by E_not on 21.08.2018.
  */
@@ -22,13 +24,14 @@ public class DirectBaseHelper extends SQLiteOpenHelper {
     db.execSQL("create table "+ DirectTable.NAME + "("+
     "_id integer primary key autoincrement, " +
             DirectTable.Cols.UUID + ", " +
-            DirectTable.Cols.DIRECTORY + ", " +
-            DirectTable.Cols.PRODUCT + ", " +
-            DirectTable.Cols.DESCRIPTION + ", " +
-            DirectTable.Cols.QTY + ")"
+            DirectTable.Cols.DIRECTORY + " not null, " +
+            DirectTable.Cols.PRODUCT + " not null, " +
+            DirectTable.Cols.DESCRIPTION + " not null, " +
+            DirectTable.Cols.QTY + " not null)"
     );
-        db.execSQL("create table "+ DirectDbSchema.DirectoryTable.DIRECTORY_NAME + "("+
-                DirectDbSchema.DirectoryTable.Colums.NAMEDIR+ ")");
+        db.execSQL("create table "+ DirectoryTable.DIRECTORY_NAME + "("+
+                "_id integer primary key autoincrement, "+
+                DirectoryTable.Colums.NAMEDIR+ ")");
     }
 
     @Override

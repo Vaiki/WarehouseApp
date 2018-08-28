@@ -46,7 +46,7 @@ public class Fragment_main extends Fragment {
         mMove.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
-                                         Intent intent = new Intent(getActivity(), Direct_activity_list.class);
+                                         Intent intent = new Intent(getActivity(), MovingActivity.class);
                                          startActivity(intent);
                                      }
                                  }

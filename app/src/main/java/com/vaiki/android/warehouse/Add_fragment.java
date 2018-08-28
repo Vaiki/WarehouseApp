@@ -37,7 +37,6 @@ public class Add_fragment extends Fragment {
     private Direct mDirect;
     private TextView mTitle;
     private EditText mName_product;
-    private EditText mCatalog;
     private EditText mDescription;
     private EditText mQty;
     private Button mAdd;
@@ -50,26 +49,23 @@ public class Add_fragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDirect = new Direct();
+        directories = DirectLab.get(getActivity()).getDirectory_Name();
 
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.add_inventory_form, container, false);
         mTitle = (TextView) v.findViewById(R.id.title_text);
         mTitle.setText("Приход ТМЦ");
-
-
         // адаптер
-    // Spinner
+        // Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, directories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
-
-          // выделяем элемент
-        spinner.setSelection(7);
+        // выделяем элемент
+        //spinner.setSelection(7);
         // устанавливаем обработчик нажатия
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -141,30 +137,28 @@ public class Add_fragment extends Fragment {
         mEditDirectory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-          LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                View editView = layoutInflater.inflate(R.layout.editactivity,null);
+                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+                View editView = layoutInflater.inflate(R.layout.editactivity, null);
                 AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getActivity());
                 mDialogBuilder.setView(editView);
                 final EditText userInput = (EditText) editView.findViewById(R.id.input_text);
-                mDialogBuilder.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener(){
+                mDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mDatabaseDirectory = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
                         ContentValues values = new ContentValues();
-                        values.put(DirectDbSchema.DirectoryTable.Colums.NAMEDIR,userInput.getText().toString());
-                        mDatabaseDirectory.insert(DirectDbSchema.DirectoryTable.DIRECTORY_NAME,null,values);
-                        Toast.makeText(getActivity(),"Новая категория создана",Toast.LENGTH_SHORT).show();
+                        values.put(DirectDbSchema.DirectoryTable.Colums.NAMEDIR, userInput.getText().toString());
+                        mDatabaseDirectory.insert(DirectDbSchema.DirectoryTable.DIRECTORY_NAME, null, values);
+                        Toast.makeText(getActivity(), "Новая категория создана", Toast.LENGTH_SHORT).show();
                     }
-                }).setNegativeButton("Отмена", new DialogInterface.OnClickListener(){
+                }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
                     }
                 });
-            AlertDialog alertDialog = mDialogBuilder.create();
+                AlertDialog alertDialog = mDialogBuilder.create();
                 alertDialog.show();
-
-
 
             }
         });
@@ -173,8 +167,7 @@ public class Add_fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DirectLab.get(getActivity()).updateDirect(getActivity(),mDirect);
-                //Toast.makeText(getActivity(), R.string.add_direct, Toast.LENGTH_LONG).show();
+                DirectLab.get(getActivity()).updateDirect(getActivity(), mDirect);
                 mAdd.setEnabled(false);
 
             }

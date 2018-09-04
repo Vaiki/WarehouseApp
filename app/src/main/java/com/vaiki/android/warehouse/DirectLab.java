@@ -47,29 +47,35 @@ public class DirectLab {
         mDatabase = new DirectBaseHelper(mContext).getWritableDatabase();
     }
 
+    public void deleteDirect(Context context, Direct direct) {
+
+    }
 
     public void updateDirect(Context context, Direct direct, Button button) {
         String description = direct.getDescription();
         String product = direct.getName_product();
-        if (direct.getQty()==0)Toast.makeText(context, R.string.empty_qty, Toast.LENGTH_SHORT).show();else{
-        try {
-            DirectCursorWrapper c = queryDirects(DirectTable.NAME, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
-                    new String[]{description, product});
-            if (c.moveToFirst()) {
-                direct.setQty(direct.getQty() + c.getDirect().getQty());
-                ContentValues values = getContentValues(direct);
-                mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
+        if (direct.getQty() == 0)
+            Toast.makeText(context, R.string.empty_qty, Toast.LENGTH_SHORT).show();
+        else {
+            try {
+                DirectCursorWrapper c = queryDirects(DirectTable.NAME, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
                         new String[]{description, product});
-                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
-            } else {
-                add_direct(direct);
-                Toast.makeText(context, R.string.add_direct, Toast.LENGTH_SHORT).show();
+                if (c.moveToFirst()) {
+                    direct.setQty(direct.getQty() + c.getDirect().getQty());
+                    ContentValues values = getContentValues(direct);
+                    mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
+                            new String[]{description, product});
+                    Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+                } else {
+                    add_direct(direct);
+                    Toast.makeText(context, R.string.add_direct, Toast.LENGTH_SHORT).show();
+                }
+                c.close();
+                button.setEnabled(false);
+            } catch (Exception e) {
+                Toast.makeText(context, R.string.empty, Toast.LENGTH_SHORT).show();
             }
-            c.close();
-            button.setEnabled(false);
-        } catch (Exception e) {
-            Toast.makeText(context, R.string.empty, Toast.LENGTH_SHORT).show();
-        }}
+        }
     }
 
     private DirectCursorWrapper queryDirects(String tableName, String whereClause, String[] whereArgs) {
@@ -91,11 +97,16 @@ public class DirectLab {
         } finally {
             cursor.close();
         }
+
         return name_directory;
     }
 
-    public List<Direct> getDirects() {
+    public List<String> getProductGroup() {
+        List<String> pr = new ArrayList<>();
+        return null;
+    }
 
+    public List<Direct> getDirects() {
         List<Direct> directs = new ArrayList<>();
         DirectCursorWrapper cursor = queryDirects(DirectTable.NAME, null, null);
         try {

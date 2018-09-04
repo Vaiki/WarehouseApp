@@ -29,4 +29,5 @@ public class DirectCursorWrapper extends CursorWrapper {
     public String getNamedirectory(){
         String dir = getString(getColumnIndex(DirectDbSchema.DirectoryTable.Colums.NAMEDIR));
         return dir ;}
+
 }

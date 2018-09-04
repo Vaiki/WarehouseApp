@@ -12,6 +12,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class Add_fragment extends Fragment {
     private ImageButton mEditDirectory;
     private List<String> directories = new ArrayList<>();
     private SQLiteDatabase mDatabaseDirectory;
+    private ArrayAdapter<String> adapter;
 
 
     @Override
@@ -56,6 +58,7 @@ public class Add_fragment extends Fragment {
         directories = DirectLab.get(getActivity()).getDirectory_Name();
 
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,21 +68,19 @@ public class Add_fragment extends Fragment {
         // адаптер
         // Spinner
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, directories);
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, directories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
 
-        // выделяем элемент
-        //spinner.setSelection(7);
-        // устанавливаем обработчик нажатия
 //        mDatabaseDirectory = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
-//        Cursor cursor = mDatabaseDirectory.query(DirectoryTable.DIRECTORY_NAME,new String[]{"_id", DirectoryTable.Colums.NAMEDIR},
-//                                                     null,null,null,null,null);
-//
+//        Cursor cursor = mDatabaseDirectory.query(DirectoryTable.DIRECTORY_NAME,
+//          new String[]{"_id", DirectoryTable.Colums.NAMEDIR},
+//          null,null,null,null,null);
 //        final Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
 //        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),android.R.layout.simple_spinner_item,cursor
 //                ,new String[]{DirectoryTable.Colums.NAMEDIR},new int[]{android.R.id.text1});
 //        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -88,10 +89,12 @@ public class Add_fragment extends Fragment {
                 ((TextView) parent.getChildAt(0)).setTextSize(18);
                 mDirect.setName_directory(spinner.getSelectedItem().toString());
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+
 //        cursor.close();
 
         mName_product = (EditText) v.findViewById(R.id.name_text);
@@ -153,6 +156,7 @@ public class Add_fragment extends Fragment {
                 LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
                 View editView = layoutInflater.inflate(R.layout.editactivity, null);
                 AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getActivity());
+
                 mDialogBuilder.setView(editView);
                 final EditText userInput = (EditText) editView.findViewById(R.id.input_text);
                 mDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -160,10 +164,17 @@ public class Add_fragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mDatabaseDirectory = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
                         ContentValues values = new ContentValues();
-                        if(userInput.getText().toString().isEmpty()){Toast.makeText(getActivity(), "Категория не создана", Toast.LENGTH_SHORT).show();}
-                      else{  values.put(DirectoryTable.Colums.NAMEDIR, userInput.getText().toString());
-                        mDatabaseDirectory.insert(DirectoryTable.DIRECTORY_NAME, null, values);
-                        Toast.makeText(getActivity(), "Новая категория создана", Toast.LENGTH_SHORT).show();}
+                        if (userInput.getText().toString().isEmpty()) {
+                            Toast.makeText(getActivity(), "Категория не создана", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            values.put(DirectoryTable.Colums.NAMEDIR, userInput.getText().toString());
+                            mDatabaseDirectory.insert(DirectoryTable.DIRECTORY_NAME, null, values);
+                            adapter.add(userInput.getText().toString());
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity(), "Новая категория создана", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     @Override
@@ -171,8 +182,17 @@ public class Add_fragment extends Fragment {
                         dialogInterface.cancel();
                     }
                 });
+                mDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {//обработчик закрытия окна
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+
+                    }
+                });
+
                 AlertDialog alertDialog = mDialogBuilder.create();
+
                 alertDialog.show();
+
             }
         });
         mAdd = (Button) v.findViewById(R.id.add_button);
@@ -180,7 +200,7 @@ public class Add_fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DirectLab.get(getActivity()).updateDirect(getActivity(), mDirect,mAdd);
+                DirectLab.get(getActivity()).updateDirect(getActivity(), mDirect, mAdd);
 
 
             }
@@ -188,4 +208,5 @@ public class Add_fragment extends Fragment {
 
         return v;
     }
+
 }

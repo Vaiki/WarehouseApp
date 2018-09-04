@@ -101,10 +101,7 @@ public class DirectLab {
         return name_directory;
     }
 
-    public List<String> getProductGroup() {
-        List<String> pr = new ArrayList<>();
-        return null;
-    }
+
 
     public List<Direct> getDirects() {
         List<Direct> directs = new ArrayList<>();

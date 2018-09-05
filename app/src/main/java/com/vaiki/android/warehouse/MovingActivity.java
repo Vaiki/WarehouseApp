@@ -55,23 +55,23 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
             }
         });
 
-        final Spinner sp = (Spinner) findViewById(R.id.spinner_decription);
-        String[] froms = new String[]{DirectTable.Cols.DESCRIPTION};
-        int[] to0 = new int[]{android.R.id.text1};
-        mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null, froms, to0, 0);
-        spinner.setAdapter(mAdapter);
-        getSupportLoaderManager().initLoader(1, null, this);
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        final Spinner sp = (Spinner) findViewById(R.id.spinner_decription);
+//        String[] fromDescript = new String[]{DirectTable.Cols.DESCRIPTION};
+//        int[] toDescript = new int[]{android.R.id.text1};
+//        mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null, fromDescript, toDescript, 0);
+//        spinner.setAdapter(mAdapter);
+//        getSupportLoaderManager().initLoader(1, null, this);
+//        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
     }
     @Override
     protected void onDestroy() {
@@ -81,7 +81,7 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, db,id);
+        return new MyCursorLoader(this, db);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
 
     static class MyCursorLoader extends CursorLoader {
         SQLiteDatabase db;
-        public MyCursorLoader(Context context, SQLiteDatabase db, int id) {
+        public MyCursorLoader(Context context, SQLiteDatabase db) {
             super(context);
             this.db = db;
         }

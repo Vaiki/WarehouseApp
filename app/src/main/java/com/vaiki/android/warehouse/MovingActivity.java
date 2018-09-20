@@ -17,6 +17,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vaiki.android.warehouse.database.DirectBaseHelper;
@@ -33,12 +34,15 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
     static final int product = 0;
     static final int description = 1;
     SQLiteDatabase db;
+    public TextView text;
+   static String where = "test";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.moving);
         db = new DirectBaseHelper(this).getWritableDatabase();
+        text = (TextView)findViewById(R.id.test);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner_product);
         String[] from = new String[]{DirectTable.Cols.PRODUCT};
@@ -49,15 +53,22 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextSize(18);
+                Cursor cursor=(Cursor)spinner.getSelectedItem();
+                where=cursor.getString(cursor.getColumnIndex
+                        (DirectTable.Cols.PRODUCT));
+                                       text.setText(where);
+                getSupportLoaderManager().restartLoader(description,null,MovingActivity.this);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
+
+        getSupportLoaderManager().restartLoader(description,null,this);
 
         final Spinner sp = (Spinner) findViewById(R.id.spinner_decription);
         String[] fromDescript = new String[]{DirectTable.Cols.DESCRIPTION};
@@ -120,11 +131,12 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
         public Cursor loadInBackground() {
             switch (LOADER_ID) {
                 case product:
-                    cursor = db.query(DirectTable.NAME, new String[]{"_id", DirectTable.Cols.PRODUCT}, null, null, DirectTable.Cols.PRODUCT, null, null);
+                    cursor = db.query(DirectTable.NAME, new String[]{"_id", DirectTable.Cols.PRODUCT}, null, null,
+                            DirectTable.Cols.PRODUCT, null, null);
                     break;
                 case description:
-                    cursor = db.query(DirectTable.NAME, new String[]{"_id", DirectTable.Cols.DESCRIPTION}, null, null, null, null, null);
-
+                    cursor = db.query(DirectTable.NAME, new String[]{"_id", DirectTable.Cols.DESCRIPTION},
+                            DirectTable.Cols.PRODUCT + "= ?",new String[]{where}, null, null, null);
             }
             return cursor;
         }

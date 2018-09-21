@@ -51,7 +51,7 @@ public class DirectLab {
 
     }
 
-    public void updateDirect(Context context, Direct direct, Button button) {
+    public void updateDirect(Context context, Direct direct, Button button, int i) {
         String description = direct.getDescription();
         String product = direct.getName_product();
         if (direct.getQty() == 0)
@@ -61,7 +61,15 @@ public class DirectLab {
                 DirectCursorWrapper c = queryDirects(DirectTable.NAME, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
                         new String[]{description, product});
                 if (c.moveToFirst()) {
-                    direct.setQty(direct.getQty() + c.getDirect().getQty());
+                    switch(i){
+                        case 1: direct.setQty(direct.getQty() + c.getDirect().getQty());
+                            break;
+                        case 0: direct.setName_directory(c.getDirect().getName_directory());
+                            int result = c.getDirect().getQty()-direct.getQty();
+                           if (result<0){ throw new Exception();}
+                            else direct.setQty(result);
+                            break;
+                    }
                     ContentValues values = getContentValues(direct);
                     mDatabase.update(DirectTable.NAME, values, DirectTable.Cols.DESCRIPTION + "= ? AND " + DirectTable.Cols.PRODUCT + "= ?",
                             new String[]{description, product});
@@ -73,7 +81,7 @@ public class DirectLab {
                 c.close();
                 button.setEnabled(false);
             } catch (Exception e) {
-                Toast.makeText(context, R.string.empty, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,R.string.negative_qty, Toast.LENGTH_SHORT).show();
             }
         }
     }

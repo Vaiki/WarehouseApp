@@ -4,4 +4,5 @@
     <string name="update">Данные обновлены</string>
     <string name="empty">Заполните пустое значение</string>
     <string name="empty_qty">Заполните поле Количество!</string>
+    <string name="negative_qty">Введенное количество больше чем имеется на складе!!!</string>
 </resources>

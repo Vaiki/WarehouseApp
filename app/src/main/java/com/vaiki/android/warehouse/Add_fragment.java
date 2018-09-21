@@ -200,7 +200,7 @@ public class Add_fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DirectLab.get(getActivity()).updateDirect(getActivity(), mDirect, mAdd);
+                DirectLab.get(getActivity()).updateDirect(getActivity(), mDirect, mAdd,1);
 
 
             }

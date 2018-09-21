@@ -14,8 +14,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,18 +35,27 @@ import static com.vaiki.android.warehouse.database.DirectDbSchema.*;
 
 public class MovingActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     SimpleCursorAdapter scAdapter, mAdapter;
+    private Direct mDirect;
     static final int product = 0;
     static final int description = 1;
     SQLiteDatabase db;
     public TextView text;
-   static String where = "test";
+    static String where = "test";
+    private EditText qty;
+    private Button moving;
+
+    private String descript;
+    private int qtys;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.moving);
         db = new DirectBaseHelper(this).getWritableDatabase();
-        text = (TextView)findViewById(R.id.test);
+        text = (TextView) findViewById(R.id.test);
+        qty = (EditText) findViewById(R.id.qty2);
+        mDirect = new Direct();
+        moving = (Button) findViewById(R.id.moving_button);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner_product);
         String[] from = new String[]{DirectTable.Cols.PRODUCT};
@@ -56,19 +69,20 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextSize(18);
-                Cursor cursor=(Cursor)spinner.getSelectedItem();
-                where=cursor.getString(cursor.getColumnIndex
+                Cursor cursor = (Cursor) spinner.getSelectedItem();
+                where = cursor.getString(cursor.getColumnIndex
                         (DirectTable.Cols.PRODUCT));
-                                       text.setText(where);
-                getSupportLoaderManager().restartLoader(description,null,MovingActivity.this);
+                mDirect.setName_product(where);
+                getSupportLoaderManager().restartLoader(description, null, MovingActivity.this);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
 
-        getSupportLoaderManager().restartLoader(description,null,this);
+        getSupportLoaderManager().initLoader(description, null, this);
 
         final Spinner sp = (Spinner) findViewById(R.id.spinner_decription);
         String[] fromDescript = new String[]{DirectTable.Cols.DESCRIPTION};
@@ -79,7 +93,9 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                Cursor cur = (Cursor) sp.getSelectedItem();
+                mDirect.setDescription(cur.getString(cur.getColumnIndex
+                        (DirectTable.Cols.DESCRIPTION)));
             }
 
             @Override
@@ -87,6 +103,29 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
 
             }
         });
+        qty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                mDirect.setQty(Integer.parseInt(s.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        moving.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DirectLab.get(getApplicationContext()).updateDirect(getApplicationContext(), mDirect, moving, 0);
+            }
+        });
+
     }
 
     @Override
@@ -136,7 +175,7 @@ public class MovingActivity extends FragmentActivity implements LoaderManager.Lo
                     break;
                 case description:
                     cursor = db.query(DirectTable.NAME, new String[]{"_id", DirectTable.Cols.DESCRIPTION},
-                            DirectTable.Cols.PRODUCT + "= ?",new String[]{where}, null, null, null);
+                            DirectTable.Cols.PRODUCT + "= ?", new String[]{where}, null, null, null);
             }
             return cursor;
         }

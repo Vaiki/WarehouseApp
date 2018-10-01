@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.vaiki.android.warehouse.database.DirectDbSchema.DirectTable;
+import com.vaiki.android.warehouse.database.DirectDbSchema.TableAll;
 
 import static com.vaiki.android.warehouse.database.DirectDbSchema.*;
 
@@ -21,17 +21,23 @@ public class DirectBaseHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-    db.execSQL("create table "+ DirectTable.NAME + "("+
+    db.execSQL("create table "+ TableAll.NAME + "("+
     "_id integer primary key autoincrement, " +
-            DirectTable.Cols.UUID + ", " +
-            DirectTable.Cols.DIRECTORY + " not null, " +
-            DirectTable.Cols.PRODUCT + " not null, " +
-            DirectTable.Cols.DESCRIPTION + " not null, " +
-            DirectTable.Cols.QTY + " not null)"
+            TableAll.Cols.UUID + ", " +
+            TableAll.Cols.DIRECTORY + ", " +
+            TableAll.Cols.PRODUCT + " , " +
+            TableAll.Cols.DESCRIPTION + " , " +
+            TableAll.Cols.QTY + " )"
     );
-        db.execSQL("create table "+ DirectoryTable.DIRECTORY_NAME + "("+
+        db.execSQL("create table "+ TableDirectory.DIRECTORY_NAME + "("+
                 "_id integer primary key autoincrement, "+
-                DirectoryTable.Colums.NAMEDIR+ ")");
+                TableDirectory.Cols.DIRECTORY + ")");
+        db.execSQL("create table "+ TableProduct.PRODUCT_NAME + "("+
+                "_id integer primary key autoincrement, "+
+                TableProduct.Cols.PRODUCT+ ")");
+        db.execSQL("create table "+ TableDescription.DESCRIPTION_NAME + "("+
+                "_id integer primary key autoincrement, "+
+                TableDescription.Cols.DESCRIPTION+ ")");
     }
 
     @Override

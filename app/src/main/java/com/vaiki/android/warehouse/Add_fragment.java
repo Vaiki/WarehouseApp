@@ -98,7 +98,7 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
         // Spinner PRODUCT
         getLoaderManager().initLoader(product, null, this);
         final Spinner spProduct = (Spinner) v.findViewById(R.id.spadd_product);
-        String[] from_prod = new String[]{TableAll.Cols.PRODUCT};
+        String[] from_prod = new String[]{TableProduct.Cols.PRODUCT};
         int[] to_prod = new int[]{android.R.id.text1};
         prod_adapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item,
                 null, from_prod, to_prod, 1);
@@ -109,9 +109,9 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
                                        int position, long id) {
                 Cursor cursor = (Cursor) spProduct.getSelectedItem();
                 where_des = cursor.getString(cursor.getColumnIndex
-                        (TableAll.Cols.PRODUCT));
+                        (TableProduct.Cols.PRODUCT));
                 mDirect.setName_product(where_des);
-                getLoaderManager().restartLoader(des,null,Add_fragment.this);
+               // getLoaderManager().restartLoader(des,null,Add_fragment.this);
             }
 
             @Override
@@ -122,7 +122,7 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
         // SPINNER DESCRIPTION
         getLoaderManager().initLoader(des, null, this);
         final Spinner spDescriptoin = (Spinner) v.findViewById(R.id.spadd_description);
-        String[] from_des = new String[]{TableAll.Cols.DESCRIPTION};
+        String[] from_des = new String[]{TableDescription.Cols.DESCRIPTION};
         int[] to_des = new int[]{android.R.id.text1};
        des_adapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item, null, from_des, to_des, 2);
         spDescriptoin.setAdapter(des_adapter);
@@ -131,9 +131,9 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 Cursor cursor = (Cursor) spDescriptoin.getSelectedItem();
-
-                mDirect.setDescription(cursor.getString(cursor.getColumnIndex
-                        (TableAll.Cols.DESCRIPTION)));
+                    where_des = cursor.getString(cursor.getColumnIndex
+                                    (TableDescription.Cols.DESCRIPTION));
+                mDirect.setDescription(where_des);
                             }
 
             @Override
@@ -373,14 +373,14 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
 //                            new String[]{"(SELECT "+TableAll.Cols.PRODUCT + " FROM "+TableAll.NAME+" WHERE "+
 //                            TableAll.Cols.DIRECTORY+ " = "+ TableDirectory.Cols.DIRECTORY+")"}, null,
 //                            null, null);
-                    cursor = db.query(TableProduct.PRODUCT_NAME,new String[]{"_id", TableProduct.Cols.PRODUCT}, null, null,
-                            TableProduct.Cols.PRODUCT, null, null);
+                    cursor = db.query(TableProduct.PRODUCT_NAME,
+                            new String[]{"_id", TableProduct.Cols.PRODUCT}, null, null,
+                            null, null, null);
                     break;
                 case des:
-                    cursor = db.query(TableAll.NAME,
-                            new String[]{"_id", TableAll.Cols.DESCRIPTION},
-                            TableAll.Cols.PRODUCT + "= ?",
-                            new String[]{where_des}, null, null, null);
+                    cursor = db.query(TableDescription.DESCRIPTION_NAME,
+                            new String[]{"_id", TableDescription.Cols.DESCRIPTION},
+                            null, null, null, null,null);
                     break;
                 case directory:
                     cursor = db.query(TableDirectory.DIRECTORY_NAME, new String[]{"_id", TableDirectory.Cols.DIRECTORY}, null, null,

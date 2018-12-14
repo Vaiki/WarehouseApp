@@ -44,15 +44,15 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
     private EditText mDescription;
     private EditText mQty;
     private Button mAdd;
-    private ImageButton mEditDirectory,mEditProduct,mEditDescription;
+    private ImageButton mEditDirectory, mEditProduct, mEditDescription;
     private List<String> directories = new ArrayList<>();
     private SQLiteDatabase db;
     private ArrayAdapter<String> adapter;
     private static String where_prod = "";
     private static String where_des = "";
 
-    SimpleCursorAdapter diradapter,prod_adapter,des_adapter;
-    static final int directory = 0;
+    SimpleCursorAdapter diradapter, prod_adapter, des_adapter; // адаптер для спиннеров
+    static final int directory = 0; //индитефикаторы для спиннеров, что бы ьрать данные с бд
     static final int product = 1;
     static final int des = 2;
 
@@ -60,48 +60,46 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDirect = new Direct();
-        directories = DirectLab.get(getActivity()).getDirectory_Name();
-        db = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
+        directories = DirectLab.get(getActivity()).getDirectory_Name(); //заполняем массив именами дикерторий
+        db = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();//инициализируем БД
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.add_inventory_form, container, false);
+        View v = inflater.inflate(R.layout.add_inventory_form, container, false); //закрепляем данный код за макетом
         mTitle = (TextView) v.findViewById(R.id.title_text);
         mTitle.setText("Приход ТМЦ");
 
-      // SPINNER DIRECTORY
-        getLoaderManager().initLoader(directory, null, this);
-        final Spinner spinner = (Spinner) v.findViewById(R.id.spadd_directory);
-        String[] from = new String[]{TableDirectory.Cols.DIRECTORY};
+        // SPINNER DIRECTORY
+        getLoaderManager().initLoader(directory, null, this); // создает загрузчик спиннера
+        final Spinner spinner = (Spinner) v.findViewById(R.id.spadd_directory); // лепим спиннер к макету
+        String[] from = new String[]{TableDirectory.Cols.DIRECTORY}; //аргумент для SQL запроса
         int[] to = new int[]{android.R.id.text1};
-        diradapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item,
-                null, from, to, 0);
+        diradapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item,null, from, to, 0);//в спиннер пилум с БД то что указали в From
         spinner.setAdapter(diradapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { // описываем что будет, если кликнем на выбранный пункт
                 Cursor cursor = (Cursor) spinner.getSelectedItem();
-                where_prod = cursor.getString(cursor.getColumnIndex
-                        (TableDirectory.Cols.DIRECTORY));
-                mDirect.setName_directory(where_prod);
-                getLoaderManager().restartLoader(product,null,Add_fragment.this);
+                where_prod = cursor.getString(cursor.getColumnIndex(TableDirectory.Cols.DIRECTORY)); // переменной присваиваем значение выбранного пункта в спиннере
+                mDirect.setName_directory(where_prod); //заносим имя в объект
+                getLoaderManager().restartLoader(product, null, Add_fragment.this);
+                // перезапускаем загрузчик с обнавленным отображением
+                //спиннера product с учетом выбранной директории
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
         // Spinner PRODUCT
         getLoaderManager().initLoader(product, null, this);
         final Spinner spProduct = (Spinner) v.findViewById(R.id.spadd_product);
         String[] from_prod = new String[]{TableProduct.Cols.PRODUCT};
         int[] to_prod = new int[]{android.R.id.text1};
-        prod_adapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item,
-                null, from_prod, to_prod, 1);
+        prod_adapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item,null, from_prod, to_prod, 1);
         spProduct.setAdapter(prod_adapter);
         spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -111,41 +109,38 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
                 where_des = cursor.getString(cursor.getColumnIndex
                         (TableProduct.Cols.PRODUCT));
                 mDirect.setName_product(where_des);
-               // getLoaderManager().restartLoader(des,null,Add_fragment.this);
+                // getLoaderManager().restartLoader(des,null,Add_fragment.this);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
         // SPINNER DESCRIPTION
         getLoaderManager().initLoader(des, null, this);
         final Spinner spDescriptoin = (Spinner) v.findViewById(R.id.spadd_description);
         String[] from_des = new String[]{TableDescription.Cols.DESCRIPTION};
         int[] to_des = new int[]{android.R.id.text1};
-       des_adapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item, null, from_des, to_des, 2);
+        des_adapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_spinner_item,null, from_des, to_des, 2);
         spDescriptoin.setAdapter(des_adapter);
         spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 Cursor cursor = (Cursor) spDescriptoin.getSelectedItem();
-                    where_des = cursor.getString(cursor.getColumnIndex
-                                    (TableDescription.Cols.DESCRIPTION));
+                where_des = cursor.getString(cursor.getColumnIndex
+                        (TableDescription.Cols.DESCRIPTION));
                 mDirect.setDescription(where_des);
-                            }
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
         mQty = (EditText) v.findViewById(R.id.qty_edit);
         mQty.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -155,10 +150,8 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
-
         mEditDirectory = (ImageButton) v.findViewById(R.id.editDirectory);
         mEditDirectory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,25 +162,28 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
 
                 mDialogBuilder.setView(editView);
                 final EditText userInput = (EditText) editView.findViewById(R.id.input_text);
-                mDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        db = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        if (userInput.getText().toString().isEmpty()) {
-                            Toast.makeText(getActivity(), "Категория не создана", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                            values.put(TableDirectory.Cols.DIRECTORY, userInput.getText().toString());
-                            db.insert(TableDirectory.DIRECTORY_NAME, null, values);
-                            getLoaderManager().restartLoader(directory,null,Add_fragment.this);
+                mDialogBuilder.setCancelable(false).setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                db = new DirectBaseHelper
+                                        (getActivity().getApplicationContext()).getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                if (userInput.getText().toString().isEmpty()) {
+                                    Toast.makeText(getActivity(),
+                                            "Категория не создана", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    values.put(TableDirectory.Cols.DIRECTORY,
+                                            userInput.getText().toString());
+                                    db.insert(TableDirectory.DIRECTORY_NAME, null, values);
+                                    getLoaderManager().restartLoader(directory, null, Add_fragment.this);
 //                            adapter.add(userInput.getText().toString());
 //                            adapter.notifyDataSetChanged();
-                            Toast.makeText(getActivity(), "Новая категория создана", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                    Toast.makeText(getActivity(), "Новая категория создана",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
@@ -196,14 +192,10 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
                 mDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {//обработчик закрытия окна
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
-
                     }
                 });
-
                 AlertDialog alertDialog = mDialogBuilder.create();
-
                 alertDialog.show();
-
             }
         });
         mEditProduct = (ImageButton) v.findViewById(R.id.editProduct);
@@ -211,31 +203,32 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View view) {
                 LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                View editView = layoutInflater.inflate(R.layout.editactivity, null);
+                View editView = layoutInflater.inflate(R.layout.editactivity,null);
                 AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getActivity());
 
                 mDialogBuilder.setView(editView);
                 final EditText userInput = (EditText) editView.findViewById(R.id.input_text);
-                mDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        db = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        if (userInput.getText().toString().isEmpty()) {
-                            Toast.makeText(getActivity(), "Товар не добавлен", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                            values.put(TableProduct.Cols.PRODUCT, userInput.getText().toString());
-                            db.insert(TableProduct.PRODUCT_NAME, null, values);
-                            getLoaderManager().restartLoader(product,null,Add_fragment.this);
-
+                mDialogBuilder.setCancelable(false).setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                db = new DirectBaseHelper(getActivity().getApplicationContext())
+                                        .getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                if (userInput.getText().toString().isEmpty()) {
+                                    Toast.makeText(getActivity(), "Товар не добавлен",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    values.put(TableProduct.Cols.PRODUCT, userInput.getText().toString());
+                                    db.insert(TableProduct.PRODUCT_NAME, null, values);
+                                    getLoaderManager().restartLoader(product, null, Add_fragment.this);
 //                            adapter.add(userInput.getText().toString());
 //                            adapter.notifyDataSetChanged();
-                            Toast.makeText(getActivity(), "Новый товар добавлен", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                    Toast.makeText(getActivity(), "Новый товар добавлен",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
@@ -244,17 +237,13 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
                 mDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {//обработчик закрытия окна
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
-
                     }
                 });
-
                 AlertDialog alertDialog = mDialogBuilder.create();
-
                 alertDialog.show();
-
             }
         });
-         mEditDescription = (ImageButton) v.findViewById(R.id.editDescription);
+        mEditDescription = (ImageButton) v.findViewById(R.id.editDescription);
         mEditDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,26 +253,28 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
 
                 mDialogBuilder.setView(editView);
                 final EditText userInput = (EditText) editView.findViewById(R.id.input_text);
-                mDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        db = new DirectBaseHelper(getActivity().getApplicationContext()).getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        if (userInput.getText().toString().isEmpty()) {
-                            Toast.makeText(getActivity(), "Описание не добавлено", Toast.LENGTH_SHORT).show();
-                        } else {
+                mDialogBuilder.setCancelable(false).setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                db = new DirectBaseHelper(getActivity().getApplicationContext())
+                                        .getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                if (userInput.getText().toString().isEmpty()) {
+                                    Toast.makeText(getActivity(), "Описание не добавлено",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
 
-                            values.put(TableDescription.Cols.DESCRIPTION, userInput.getText().toString());
-                            db.insert(TableDescription.DESCRIPTION_NAME, null, values);
-                            getLoaderManager().restartLoader(product,null,Add_fragment.this);
-
+                                    values.put(TableDescription.Cols.DESCRIPTION, userInput.getText()
+                                            .toString());
+                                    db.insert(TableDescription.DESCRIPTION_NAME, null, values);
+                                    getLoaderManager().restartLoader(product, null, Add_fragment.this);
 //                            adapter.add(userInput.getText().toString());
 //                            adapter.notifyDataSetChanged();
-                            Toast.makeText(getActivity(), "Новое описание добавлено", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                    Toast.makeText(getActivity(), "Новое описание добавлено", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
@@ -292,34 +283,20 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
                 mDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {//обработчик закрытия окна
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
-
                     }
                 });
-
                 AlertDialog alertDialog = mDialogBuilder.create();
-
                 alertDialog.show();
-
             }
         });
-
-
-
-
-
         mAdd = (Button) v.findViewById(R.id.add_button);
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 DirectLab.get(getActivity()).updateDirect(getActivity(), mDirect, mAdd, 1);
-
-
             }
         });
-
         return v;
-
     }
 
     @Override
@@ -350,7 +327,6 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     static class MyLoader extends CursorLoader {
@@ -369,10 +345,12 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
             switch (LOADER_ID) {
                 case product:
 //                    cursor = db.query(TableProduct.PRODUCT_NAME,
-//                            new String[]{"_id", TableProduct.Cols.PRODUCT }, TableProduct.Cols.PRODUCT + "= ?",
-//                            new String[]{"(SELECT "+TableAll.Cols.PRODUCT + " FROM "+TableAll.NAME+" WHERE "+
-//                            TableAll.Cols.DIRECTORY+ " = "+ TableDirectory.Cols.DIRECTORY+")"}, null,
-//                            null, null);
+//                            new String[]{"_id", TableProduct.Cols.PRODUCT },
+//                                  TableProduct.Cols.PRODUCT + "= ?",
+//                            new String[]{"(SELECT "+TableAll.Cols.PRODUCT + " FROM "+
+//                                  TableAll.NAME+" WHERE "+
+//                            TableAll.Cols.DIRECTORY+ " = "+ TableDirectory.Cols.DIRECTORY+")"},
+//                                   null,null, null);
                     cursor = db.query(TableProduct.PRODUCT_NAME,
                             new String[]{"_id", TableProduct.Cols.PRODUCT}, null, null,
                             null, null, null);
@@ -380,10 +358,11 @@ public class Add_fragment extends Fragment implements LoaderManager.LoaderCallba
                 case des:
                     cursor = db.query(TableDescription.DESCRIPTION_NAME,
                             new String[]{"_id", TableDescription.Cols.DESCRIPTION},
-                            null, null, null, null,null);
+                            null, null, null, null, null);
                     break;
                 case directory:
-                    cursor = db.query(TableDirectory.DIRECTORY_NAME, new String[]{"_id", TableDirectory.Cols.DIRECTORY}, null, null,
+                    cursor = db.query(TableDirectory.DIRECTORY_NAME, new String[]{"_id",
+                                    TableDirectory.Cols.DIRECTORY}, null, null,
                             TableDirectory.Cols.DIRECTORY, null, null);
                     break;
             }
